@@ -7,6 +7,7 @@
 from open3d import *
 import numpy as np
 import copy
+import argparse
 
 def draw_registration_result(source, target, transformation):
     source_temp = copy.deepcopy(source)
@@ -31,10 +32,10 @@ def preprocess_point_cloud(pcd, voxel_size):
             KDTreeSearchParamHybrid(radius = radius_feature, max_nn = 100))
     return pcd_down, pcd_fpfh
 
-def prepare_dataset(voxel_size):
+def prepare_dataset(voxel_size, source_path, target_path):
     print(":: Load two point clouds and disturb initial pose.")
-    source = read_point_cloud("../../TestData/ICP/cloud_bin_0.pcd")
-    target = read_point_cloud("../../TestData/ICP/cloud_bin_1.pcd")
+    source = read_point_cloud(source_path)
+    target = read_point_cloud(target_path)
     trans_init = np.asarray([[0.0, 0.0, 1.0, 0.0],
                             [1.0, 0.0, 0.0, 0.0],
                             [0.0, 1.0, 0.0, 0.0],

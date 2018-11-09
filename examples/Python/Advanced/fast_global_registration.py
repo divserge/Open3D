@@ -8,6 +8,7 @@ from open3d import *
 from global_registration import *
 import numpy as np
 import copy
+import argparse
 
 import time
 
@@ -23,10 +24,15 @@ def execute_fast_global_registration(source_down, target_down,
     return result
 
 if __name__ == "__main__":
-
-    voxel_size = 0.05 # means 5cm for the dataset
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--source-path', required=True)
+    parser.add_argument('--target-path', required=True)
+    parser.add_argument('--voxel-size', required=False, default=0.05)
+    parser.add_argument('--output-path', required=False, default='./transform.npy')
+    args = parser.parse_args()
+    voxel_size = float(args.voxel_size)
     source, target, source_down, target_down, source_fpfh, target_fpfh = \
-            prepare_dataset(voxel_size)
+            prepare_dataset(voxel_size, args.source_path, args.target_path)
 
     start = time.time()
     result_ransac = execute_global_registration(source_down, target_down,
@@ -40,5 +46,6 @@ if __name__ == "__main__":
     result_fast = execute_fast_global_registration(source_down, target_down,
             source_fpfh, target_fpfh, voxel_size)
     print("Fast global registration took %.3f sec.\n" % (time.time() - start))
-    draw_registration_result(source_down, target_down,
+    draw_registration_result(source, target,
             result_fast.transformation)
+    np.save(args.output_path, np.array(result_fast.transformation))
