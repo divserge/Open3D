@@ -36,11 +36,7 @@ def prepare_dataset(voxel_size, source_path, target_path):
     print(":: Load two point clouds and disturb initial pose.")
     source = read_point_cloud(source_path)
     target = read_point_cloud(target_path)
-    trans_init = np.asarray([[0.0, 0.0, 1.0, 0.0],
-                            [1.0, 0.0, 0.0, 0.0],
-                            [0.0, 1.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 1.0]])
-    source.transform(trans_init)
+    source.transform(np.eye(4))
     draw_registration_result(source, target, np.identity(4))
 
     source_down, source_fpfh = preprocess_point_cloud(source, voxel_size)

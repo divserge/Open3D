@@ -35,17 +35,8 @@ if __name__ == "__main__":
             prepare_dataset(voxel_size, args.source_path, args.target_path)
 
     start = time.time()
-    result_ransac = execute_global_registration(source_down, target_down,
-            source_fpfh, target_fpfh, voxel_size)
-    print(result_ransac)
-    print("Global registration took %.3f sec.\n" % (time.time() - start))
-    draw_registration_result(source_down, target_down,
-            result_ransac.transformation)
-
-    start = time.time()
     result_fast = execute_fast_global_registration(source_down, target_down,
             source_fpfh, target_fpfh, voxel_size)
     print("Fast global registration took %.3f sec.\n" % (time.time() - start))
-    draw_registration_result(source, target,
-            result_fast.transformation)
+    print(result_fast)
     np.save(args.output_path, np.array(result_fast.transformation))
